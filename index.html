@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoom sulla TV e Avvio del Video</title>
+    <style>
+        body {
+            background-color: black;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .container {
+            position: relative;
+            width: 200px; /* Dimensione della TV */
+            height: auto;
+            transition: transform 2.5s ease-in-out, opacity 1s ease-in-out;
+            transform-origin: center;
+        }
+        .tv {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        .button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px; /* Dimensioni del pulsante */
+            height: auto;
+            cursor: pointer;
+        }
+        .video-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+        }
+        video {
+            width: 80%;
+            height: auto;
+            pointer-events: none; /* Disabilita l'interazione con il video */
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="tv-container">
+        <img src="tv.png" alt="TV" class="tv">
+        <img src="button.png" alt="Pulsante" class="button" id="button">
+    </div>
+    <div class="video-container" id="video-container">
+        <video id="video" preload="auto">
+            <source src="video.mp4" type="video/mp4">
+            Il tuo browser non supporta il tag video.
+        </video>
+    </div>
+
+    <script>
+        document.getElementById('button').addEventListener('click', function() {
+            const container = document.getElementById('tv-container');
+            container.style.transform = 'scale(10)';
+
+            // Ritardiamo il fade out per 1.5 secondi
+            setTimeout(function() {
+                container.style.opacity = '0';
+            }, 1500);
+
+            // Dopo la transizione totale di 2.5 secondi più 1 secondo di fade out
+            setTimeout(function() {
+                container.style.display = 'none';
+                const videoContainer = document.getElementById('video-container');
+                videoContainer.style.display = 'flex';
+                const video = document.getElementById('video');
+                video.play();
+            }, 3500); // 2500ms (zoom) + 1000ms (fade out)
+        });
+
+        // Impedisci il controllo del video
+        const video = document.getElementById('video');
+        video.addEventListener('play', function() {
+            setTimeout(() => {
+                video.pause();
+                video.play();
+            }, 0);
+        });
+        video.addEventListener('pause', function() {
+            setTimeout(() => {
+                video.play();
+            }, 0);
+        });
+    </script>
+</body>
+</html>
